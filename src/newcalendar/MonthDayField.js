@@ -7,7 +7,6 @@ import {ResetContext} from "./Calendar";
 import MonthFullDayEventEntry from "./MonthFullDayEventEntry";
 import MonthEventEntry from "./MonthEventEntry";
 import Modal from "../modal/Modal";
-import {useForm} from "../form/FormHook";
 import EventForm from "./EventForm";
 
 export default function MonthDayField({events, date, month}) {
@@ -15,8 +14,6 @@ export default function MonthDayField({events, date, month}) {
 	const [modalOpen, setModalOpen] = useState(false);
 	const [contextMenu, setContextMenu] = useState(initialContextMenu);
 	const reset = useContext(ResetContext);
-	// FIXME move to form
-	const [register, submit, clearErrors] = useForm();
 
 	const handleContextMenu = (e) => {
 		e.preventDefault();
@@ -31,14 +28,6 @@ export default function MonthDayField({events, date, month}) {
 
 	const closeModal = () => {
 		setModalOpen(false);
-		clearErrors();
-	};
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		const formData = new FormData(e.target);
-		console.log(Object.fromEntries(formData));
-		closeModal();
 	};
 
 	return (
@@ -69,7 +58,7 @@ export default function MonthDayField({events, date, month}) {
 			</div>
 
 			<Modal open={modalOpen} doClose={closeModal}>
-				<EventForm register={register} onSubmit={submit(handleSubmit)} closeModal={closeModal}/>
+				<EventForm onSubmit={closeModal}/>
 			</Modal>
 
 			<ContextMenu content={contextMenu} closeMenu={closeContextMenu}>

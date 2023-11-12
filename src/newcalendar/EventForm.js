@@ -11,7 +11,7 @@ import TimePickerInput from "../inputs/TimePickerInput";
 import NumberInput from "../inputs/NumberInput";
 import MultiSelectInput from "../inputs/MultiSelectInput";
 import SelectInput from "../inputs/SelectInput";
-
+import {useForm} from "../form/FormHook";
 
 const items = [
 	{
@@ -98,13 +98,22 @@ function options() {
 }
 
 // FIXME move modal stuff out of here (title of modal and close buttons)
-// FIXME move useForm into here
-export default function EventForm({register, onSubmit, closeModal}) {
+export default function EventForm({onSubmit}) {
 
 	const [fullDay, setFullDay] = useState(false);
 	const [recurring, setRecurring] = useState(false);
 	const [recurrence, setRecurrence] = useState(0)
 	const [recurrenceEndType, setRecurrenceEndType] = useState(0);
+
+	const [register, submit, clearErrors] = useForm();
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const formData = new FormData(e.target);
+		console.log(Object.fromEntries(formData));
+		clearErrors();
+		onSubmit();
+	};
 
 	const setRecurrenceId = (value) => {
 		setRecurrence(value.id);
@@ -115,7 +124,7 @@ export default function EventForm({register, onSubmit, closeModal}) {
 	};
 
 	return (
-		<form method="post" noValidate onSubmit={onSubmit} spellCheck={false}>
+		<form method="post" noValidate onSubmit={submit(handleSubmit)} spellCheck={false}>
 
 			<div className="p-2 w-[700px] flex flex-col select-none gap-4">
 				<div className="flex w-full items-center justify-between pl-1 text-dp-24 ">
@@ -123,7 +132,7 @@ export default function EventForm({register, onSubmit, closeModal}) {
 						<CalendarPlus size={16}/>
 						<div className="text-sm font-medium pt-0.5">New Event</div>
 					</div>
-					<IconButton onClick={closeModal}>
+					<IconButton onClick={onSubmit}>
 						<X size={16}/>
 					</IconButton>
 				</div>
@@ -185,7 +194,7 @@ export default function EventForm({register, onSubmit, closeModal}) {
 
 
 				<div className="flex justify-end gap-2">
-					<DefaultButton onClick={closeModal}>Cancel</DefaultButton>
+					<DefaultButton onClick={onSubmit}>Cancel</DefaultButton>
 					<SuccessButton type={"submit"}>
 						Save
 					</SuccessButton>
