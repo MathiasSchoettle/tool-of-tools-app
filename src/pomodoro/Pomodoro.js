@@ -1,9 +1,9 @@
-import {Play, X} from "phosphor-react";
 import {useRef, useState} from "react";
+import {Play, X} from "lucide-react";
 
 export default function Pomodoro() {
 
-    const test = false;
+    const test = true;
     const short_break_duration = test ? 2000: 5 * 60 * 1000;
     const long_break_duration = test ? 5000 : 30 * 60 * 1000;
     const work_duration = test ? 2000 : 25 * 60 * 1000;

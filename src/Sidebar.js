@@ -1,46 +1,78 @@
-import {Alarm, CalendarBlank, Cardholder, GameController, Skull} from "phosphor-react";
+import IconButton from './inputs/IconButton'
+import {
+    CalendarDays,
+    FileBadge,
+    GraduationCap,
+    HelpCircle,
+    Inbox,
+    Settings,
+    Terminal,
+} from 'lucide-react'
+import { animated, useTransition } from 'react-spring'
 
-function Entry({children, id, current_id, set}) {
-
-    let selected = id === current_id;
-    let style = selected ? "text-emerald-400" : "text-neutral-400 ";
+export default function Sidebar({ opened, set_panel }) {
+    const transition = useTransition(opened, {
+        from: {
+            width: '0',
+        },
+        enter: {
+            width: '13rem',
+        },
+        leave: {
+            width: '0',
+        },
+        config: {
+            tension: 287,
+            friction: 30,
+            precision: 0.005,
+        },
+    })
 
     return (
-        <div className="w-full aspect-square flex justify-center items-center cursor-pointer">
-            <div className="w-full h-full bg-main-dark hover:bg-main rounded-md flex justify-center items-center" onClick={() => set(id)}>
-                <div className={style}>
-                    {children}
-                </div>
+        <div
+            className={
+                'h-full flex flex-shrink-0 overflow-hidden transition duration-200 ' +
+                (opened ? 'bg-dp-04' : '')
+            }
+        >
+            <div className="h-full w-11 border-r border-dp-12 z-20 text-neutral-300 flex flex-col items-center gap-2 py-2">
+                <IconButton onClick={() => set_panel(1)}>
+                    <Inbox size={18} />
+                </IconButton>
+                <IconButton onClick={() => set_panel(2)}>
+                    <GraduationCap size={18} />
+                </IconButton>
+                <IconButton onClick={() => set_panel(3)}>
+                    <CalendarDays size={18} />
+                </IconButton>
+                <IconButton onClick={() => set_panel(4)}>
+                    <Terminal size={18} />
+                </IconButton>
+                <IconButton onClick={() => set_panel(5)}>
+                    <FileBadge size={18} />
+                </IconButton>
+                <div className="grow" />
+                <IconButton>
+                    <HelpCircle size={18} />
+                </IconButton>
+                <IconButton>
+                    <Settings size={18} />
+                </IconButton>
             </div>
+
+            {transition((style, item) =>
+                item ? (
+                    <animated.div
+                        style={style}
+                        className={
+                            'overflow-hidden items-center gap-5 h-full border-r border-dp-12 z-50 text-neutral-300 flex flex-col ' +
+                            (opened ? '' : 'border-opacity-0')
+                        }
+                    ></animated.div>
+                ) : (
+                    ''
+                )
+            )}
         </div>
-    );
-}
-
-export default function Sidebar({current, set_current}) {
-
-    const icon_size = 25;
-
-    return (
-        <div className="h-full w-20 bg-main-darkest flex flex-col p-3 gap-3">
-            <Entry id={1} current_id={current} selected={true} set={set_current}>
-                <Cardholder size={icon_size} weight="fill"/>
-            </Entry>
-
-            <Entry id={2} current_id={current} set={set_current}>
-                <GameController size={icon_size} weight="fill"/>
-            </Entry>
-
-            <Entry id={3} current_id={current} set={set_current}>
-                <Alarm size={icon_size} weight="fill" />
-            </Entry>
-
-            <Entry id={4} current_id={current} set={set_current}>
-                <CalendarBlank size={icon_size} weight="fill" />
-            </Entry>
-
-            <Entry id={5} current_id={current} set={set_current}>
-                <Skull size={icon_size} weight="fill" />
-            </Entry>
-        </div>
-    );
+    )
 }

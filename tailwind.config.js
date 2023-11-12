@@ -1,17 +1,48 @@
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
-  theme: {
-    extend: {
-      colors: {
-        'main': {
-          light: '#38393b',
-          DEFAULT: '#2B2C2E',
-          dark: '#202123',
-          darkest: '#171718',
-          black: '#0a0a0a',
-        },
-      },
-    },
-  },
-  plugins: [],
+	content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
+	theme: {
+		extend: {
+			colors: {
+				'dp': {
+					'00': '#121212',
+					'01': '#1c1c1c',
+					'02': '#212121',
+					'03': '#242424',
+					'04': '#262626',
+					'06': '#2c2c2c',
+					'08': '#2d2d2d',
+					'12': '#323232',
+					'14': '#363636',
+					'16': '#5d5d5d',
+					'24': '#9d9d9d',
+					'32': '#d3d3d3',
+				},
+				'mn': {
+					50: '#8CF5C3',
+					100: '#79F3BB',
+					200: '#53F0AD',
+					300: '#2EEDA1',
+					400: '#13DF95',
+					500: '#10B981',
+					600: '#0E9D72',
+					700: '#0B8161',
+					800: '#09654F',
+					900: '#06483B',
+					950: '#053A30'
+				},
+				// FIXME remove
+				'main': {
+					light: '#38393b',
+					DEFAULT: '#2B2C2E',
+					dark: '#202123',
+					darkest: '#171718',
+					black: '#0a0a0a',
+				},
+			},
+			boxShadow: {
+				'bg': '0 0px 10px rgba(0,0,0,0.5)',
+			},
+		},
+	},
+	plugins: [],
 }

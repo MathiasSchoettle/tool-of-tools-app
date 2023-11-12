@@ -1,6 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --top-bar-height: 2.5rem;
+}
+
+body {
+    background-color: #121212;
+}
 
 *:focus {
     outline: none;
@@ -53,10 +63,18 @@
     -webkit-app-region: no-drag;
 }
 
+/* FIXME make this a tailwind attribute */
 .h-topbar {
-    height: 2rem;
+    height: var(--top-bar-height);
+    min-height: var(--top-bar-height);
+    max-height: var(--top-bar-height);
 }
 
+/* FIXME make this a tailwind attribute */
 .h-content {
-    height: calc(100vh - 2rem);
+    height: calc(100vh - var(--top-bar-height));
+}
+
+input {
+    color-scheme: dark;
 }

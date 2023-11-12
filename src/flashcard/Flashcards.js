@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from "react";
 import Button from "../inputs/Button";
-import {
-    CaretDoubleLeft, CaretDoubleRight,
-    CaretLeft, CaretRight,
-    Check,
-    CircleNotch,
-    MagnifyingGlass,
-    PencilSimple,
-    Plus,
-    Trash, X
-} from "phosphor-react";
 import Modal from "../modal/Modal";
 import {useSpring, animated} from "react-spring";
+import {
+    Check,
+    ChevronLeft,
+    ChevronRight,
+    ChevronsLeft,
+    ChevronsRight, Loader2,
+    Pencil, Plus,
+    Search,
+    Trash, X
+} from "lucide-react";
 
 export default function Flashcards() {
     const [loading, set_loading] = useState(true);
@@ -50,6 +50,9 @@ export default function Flashcards() {
     function fetch_decks() {
         const options = {
             method: 'GET',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         set_start_date(Date.now);
@@ -57,6 +60,7 @@ export default function Flashcards() {
         fetch('http://localhost:8080/flash/deck/all', options)
             .then(async res => {
                 const data = await res.json();
+                console.log(data)
                 set_deck_list(data);
                 set_loading(false);
                 set_offline(false);
@@ -71,6 +75,9 @@ export default function Flashcards() {
     function fetch_card_list(new_deck) {
         const options = {
             method: 'GET',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         if (new_deck === undefined) return;
@@ -91,6 +98,9 @@ export default function Flashcards() {
     function fetch_card(new_deck) {
         const options = {
             method: 'GET',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         if (new_deck === undefined) return;
@@ -121,6 +131,9 @@ export default function Flashcards() {
     function answer_card(answer) {
         const options = {
             method: 'POST',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         let now = Date.now();
@@ -141,6 +154,9 @@ export default function Flashcards() {
     const delete_card = (id) => {
         const options = {
             method: 'DELETE',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         fetch('http://localhost:8080/flash/card/' + id, options)
@@ -156,6 +172,9 @@ export default function Flashcards() {
     const update_card = (id, question, answer) => {
         const options = {
             method: 'PATCH',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         fetch('http://localhost:8080/flash/card/' + id + '?question=' + question + '&answer=' + answer, options)
@@ -173,6 +192,9 @@ export default function Flashcards() {
 
         const options = {
             method: 'POST',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         fetch('http://localhost:8080/flash/deck?name=' + name, options)
@@ -191,6 +213,9 @@ export default function Flashcards() {
 
         const options = {
             method: 'POST',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         fetch('http://localhost:8080/flash/card?deckId=' + current_deck + '&question=' + question + '&answer=' + answer, options)
@@ -206,6 +231,9 @@ export default function Flashcards() {
     const delete_deck = (id) => {
         const options = {
             method: 'DELETE',
+            headers: {
+                'Authorization': 'test'
+            }
         }
 
         fetch('http://localhost:8080/flash/deck?deckId=' + id, options)
@@ -239,7 +267,7 @@ export default function Flashcards() {
     if (loading) {
         return (
             <div className="w-full h-full flex flex-col items-center justify-center text-gray-200 gap-5 bg-main-dark">
-                <CircleNotch className="animate-spin" size={40} weight="fill" />
+                <Loader2 className="animate-spin" size={40} weight="fill" />
             </div>
         );
     }
@@ -249,7 +277,7 @@ export default function Flashcards() {
             <div className="w-full h-full flex items-center justify-center bg-main-dark">
                 <div className="bg-main-darkest flex flex-col items-center justify-center gap-5 p-5 rounded-md border border-main-light">
                     <div className="text-neutral-400">Can't reach server!</div>
-                    <Button on_click={reload} type="primary">Reload</Button>
+                    <Button onClick={reload} type="primary">Reload</Button>
                 </div>
             </div>
         );
@@ -257,7 +285,7 @@ export default function Flashcards() {
 
     return (
         <>
-            <div className="w-full h-full relative bg-red-600">
+            <div className="w-full h-full relative">
                 <animated.div className="w-full h-full relative flex" style={content_props}>
                     <div className="w-[250px] min-w-[250px] h-full bg-main-dark">
                         <div className="h-min m-2 flex flex-col gap-2 text-sm">
@@ -279,15 +307,12 @@ export default function Flashcards() {
                 </animated.div>
             </div>
 
-            <Modal title="New Deck" open={new_deck_modal_is_open} do_close={() => set_new_deck_modal_is_open(false)} bottom_content={
-                <>
-                    <Button on_click={submit_new_deck} type='success' >Save</Button>
-                    <Button on_click={() => set_new_deck_modal_is_open(false)}>Cancel</Button>
-                </>
-            }>
+            <Modal title="New Deck" open={new_deck_modal_is_open} doClose={() => set_new_deck_modal_is_open(false)}>
                     <div className="w-72">
                         <label htmlFor="title" className="fixed text-sm text-neutral-300 font-bold p-2 pt-1.5">Name</label>
                         <input autoFocus={true} id="title" type="text" className="w-full rounded bg-main border border-neutral-600 px-2 pt-7 pb-2 text-neutral-400 text-sm" maxLength={32}/>
+                        <Button onClick={submit_new_deck} type='success' >Save</Button>
+                        <Button onClick={() => set_new_deck_modal_is_open(false)}>Cancel</Button>
                     </div>
             </Modal>
         </>
@@ -384,7 +409,7 @@ function Settings({close, is_closed, cards_list, delete_card, submit_new_card, u
     function get_table_content(search_content) {
         let entries = [];
         cards_list.filter(card => filter_card(card, search_content)).forEach(card => entries.push(
-            <tr key={card.id} className="h-10 text-sm text-neutral-200 text-sm cursor-pointer rounded-full hover:bg-main-light group" onClick={() => open_edit_modal(card)}>
+            <tr key={card.id} className="h-10 text-neutral-200 text-sm cursor-pointer rounded-full hover:bg-main-light group" onClick={() => open_edit_modal(card)}>
                 <td className="px-4 whitespace-nowrap overflow-hidden overflow-ellipsis rounded-l-md">{card.content.question}</td>
                 <td className="px-4 whitespace-nowrap overflow-hidden overflow-ellipsis">{card.content.solution}</td>
                 <td className="px-4 text-center">-</td>
@@ -403,11 +428,11 @@ function Settings({close, is_closed, cards_list, delete_card, submit_new_card, u
             <div className="w-full h-full flex flex-col">
                 <div className="bg-main h-14 p-2 w-full flex gap-2">
                     <div className="flex justify-center h-full aspect-square items-center text-neutral-400 cursor-pointer" onClick={do_close}>
-                        <CaretLeft size={24} ></CaretLeft>
+                        <ChevronLeft size={24} ></ChevronLeft>
                     </div>
 
                     <div className="bg-main-darkest flex items-center p-2 gap-2 rounded text-sm text-gray-200 border border-main-light relative">
-                        <MagnifyingGlass size={18} className="text-gray-400"/>
+                        <Search size={18} className="text-gray-400"/>
                         <input id="search-text" type="text" value={search_content} onInput={e => set_search_content(e.target.value)} placeholder={search_focused ? "" : "Filter"} className="bg-transparent" onFocus={() => set_search_focused(true)} onBlur={() => set_search_focused(false)} />
                         <div className="w-12 flex justify-end">
                             {search_end_content(search_content)}
@@ -415,7 +440,7 @@ function Settings({close, is_closed, cards_list, delete_card, submit_new_card, u
                     </div>
 
                     <div className="flex items-center justify-end pl-2">
-                        <Button type="success" on_click={() => set_new_modal_open(true)}>New</Button>
+                        <Button type="success" onClick={() => set_new_modal_open(true)}>New</Button>
                     </div>
                 </div>
 
@@ -441,15 +466,7 @@ function Settings({close, is_closed, cards_list, delete_card, submit_new_card, u
                 </div>
             </div>
 
-            <Modal title="Delete Card" open={delete_modal_open} do_close={() => set_delete_modal_open(false)} bottom_content={
-                <>
-                    <Button on_click={() => set_delete_modal_open(false)}>Cancel</Button>
-                    <Button on_click={() => {
-                        delete_card(selected_card.id);
-                        set_delete_modal_open(false);
-                    }} type='danger' >Delete</Button>
-                </>
-            }>
+            <Modal title="Delete Card" open={delete_modal_open} do_close={() => set_delete_modal_open(false)}>
                 <div className="flex flex-col gap-2 w-96">
                     <div className="flex flex-col justify-center border border-neutral-600 rounded-md bg-main p-2 gap-1">
                         <div className="text-sm font-bold text-neutral-300">Question</div>
@@ -460,18 +477,16 @@ function Settings({close, is_closed, cards_list, delete_card, submit_new_card, u
                         <div className="text-sm font-bold text-neutral-300">Answer</div>
                         <div className="text-sm text-neutral-400">{answer_content}</div>
                     </div>
+
+                    <Button onClick={() => set_delete_modal_open(false)}>Cancel</Button>
+                    <Button onClick={() => {
+                        delete_card(selected_card.id);
+                        set_delete_modal_open(false);
+                    }} type='danger' >Delete</Button>
                 </div>
             </Modal>
 
-            <Modal title="Create new Card" open={new_modal_open} do_close={() => set_new_modal_open(false)} bottom_content={
-                <>
-                    <Button on_click={() => set_new_modal_open(false)}>Cancel</Button>
-                    <Button on_click={() => {
-                        new_card();
-                        set_new_modal_open(false);
-                    }} type='success' >Create</Button>
-                </>
-            }>
+            <Modal title="Create new Card" open={new_modal_open} do_close={() => set_new_modal_open(false)}>
                 <div className="flex flex-col gap-2 w-96">
                     <div className="">
                         <label htmlFor="question" className="fixed text-sm text-neutral-300 font-bold p-2 pt-1.5">Question</label>
@@ -482,22 +497,16 @@ function Settings({close, is_closed, cards_list, delete_card, submit_new_card, u
                         <label htmlFor="answer" className="fixed text-sm text-neutral-300 font-bold p-2 pt-1.5">Answer</label>
                         <input id="answer" type="text" className="w-full rounded bg-main border border-neutral-600 px-2 pt-7 pb-2 text-neutral-400 text-sm" maxLength={128}/>
                     </div>
+
+                    <Button onClick={() => set_new_modal_open(false)}>Cancel</Button>
+                    <Button onClick={() => {
+                        new_card();
+                        set_new_modal_open(false);
+                    }} type='success' >Create</Button>
                 </div>
             </Modal>
 
-            <Modal title="Edit Card" open={edit_modal_open} do_close={() => set_edit_modal_open(false)} bottom_content={
-                <>
-                    <Button on_click={() => set_edit_modal_open(false)}>Cancel</Button>
-                    <Button on_click={() => {
-                        delete_card(selected_card.id);
-                        set_edit_modal_open(false);
-                    }} type='danger' >Delete</Button>
-                    <Button on_click={() => {
-                        do_card_update();
-                        set_edit_modal_open(false);
-                    }} type='success' >Update</Button>
-                </>
-            }>
+            <Modal title="Edit Card" open={edit_modal_open} do_close={() => set_edit_modal_open(false)}>
                 <div className="flex flex-col gap-2 w-96">
                     <div className="">
                         <label htmlFor="question" className="fixed text-sm text-neutral-300 font-bold p-2 pt-1.5">Question</label>
@@ -508,6 +517,16 @@ function Settings({close, is_closed, cards_list, delete_card, submit_new_card, u
                         <label htmlFor="answer" className="fixed text-sm text-neutral-300 font-bold p-2 pt-1.5">Answer</label>
                         <input defaultValue={answer_content} id="new_answer" type="text" className="w-full rounded bg-main border border-neutral-600 px-2 pt-7 pb-2 text-neutral-400 text-sm" maxLength={128}/>
                     </div>
+
+                    <Button onClick={() => set_edit_modal_open(false)}>Cancel</Button>
+                    <Button onClick={() => {
+                        delete_card(selected_card.id);
+                        set_edit_modal_open(false);
+                    }} type='danger' >Delete</Button>
+                    <Button onClick={() => {
+                        do_card_update();
+                        set_edit_modal_open(false);
+                    }} type='success' >Update</Button>
                 </div>
             </Modal>
         </>
@@ -546,24 +565,21 @@ function DeckEntry({deck, current_deck, set_deck, show_settings, set_show_settin
                     {get_deck_badge(deck)}
                     <div className="uppercase whitespace-nowrap">{deck.name}</div>
                     <div className={"flex flex-grow justify-end opacity-0 group-hover:opacity-100 gap-1 " + (current_deck === deck.id ? "visible" : "hidden")}>
-                        <PencilSimple size={18} onClick={() => set_show_settings(!show_settings)} className="hover:text-gray-100 text-gray-400 transition duration-200" weight="light" />
+                        <Pencil size={18} onClick={() => set_show_settings(!show_settings)} className="hover:text-gray-100 text-gray-400 transition duration-200" weight="light" />
                         <Trash size={18} onClick={() => set_modal_open(true)} className="hover:text-gray-100 text-gray-400 transition duration-200" weight="light"/>
                     </div>
                 </div>
 
             </div>
 
-            <Modal title="Delete Deck" open={modal_open} do_close={() => set_modal_open(false)} bottom_content={
-                <>
-                    <Button on_click={() => set_modal_open(false)}>Cancel</Button>
-                    <Button on_click={() => submit_delete(deck.id)} type='danger' >Delete</Button>
-                </>
-            }>
+            <Modal title="Delete Deck" open={modal_open} do_close={() => set_modal_open(false)}>
                 <div className="flex flex-col gap-2 w-80">
                     <div className="flex flex-col justify-center border border-neutral-600 rounded-md bg-main p-2 gap-1">
                         <div className="text-sm font-bold text-neutral-300 uppercase">{deck.name}</div>
                     </div>
 
+                    <Button onClick={() => set_modal_open(false)}>Cancel</Button>
+                    <Button onClick={() => submit_delete(deck.id)} type='danger' >Delete</Button>
                 </div>
             </Modal>
         </>
@@ -614,16 +630,16 @@ function Card({deck, card, answer_card, hide_answer, set_hide_answer}) {
                     </div>
                     <div className="flex gap-4">
                         <div onClick={() => submit('AGAIN')} className="h-10 bg-main-dark aspect-square rounded-md cursor-pointer border border-main-light flex items-center justify-center text-neutral-300 hover:bg-main transition duration-200 font-semibold">
-                            <CaretDoubleLeft size={22} weight="bold" />
+                            <ChevronsLeft size={22} weight="bold" />
                         </div>
                         <div onClick={() => submit('HARD')} className="h-10 bg-main-dark aspect-square rounded-md cursor-pointer border border-main-light flex items-center justify-center text-neutral-300 hover:bg-main transition duration-200 font-semibold">
-                            <CaretLeft size={22} weight="bold" />
+                            <ChevronRight size={22} weight="bold" />
                         </div>
                         <div onClick={() => submit('GOOD')} className="h-10 bg-main-dark aspect-square rounded-md cursor-pointer border border-main-light flex items-center justify-center text-neutral-300 hover:bg-main transition duration-200 font-semibold">
-                            <CaretRight size={22} weight="bold" />
+                            <ChevronRight size={22} weight="bold" />
                         </div>
                         <div onClick={() => submit('EASY')} className="h-10 bg-main-dark aspect-square rounded-md cursor-pointer border border-main-light flex items-center justify-center text-neutral-300 hover:bg-main transition duration-200 font-semibold">
-                            <CaretDoubleRight size={22} weight="bold" />
+                            <ChevronsRight size={22} weight="bold" />
                         </div>
                     </div>
                 </animated.div>
@@ -634,7 +650,7 @@ function Card({deck, card, answer_card, hide_answer, set_hide_answer}) {
 
     return (
         <div className="h-full w-full flex flex-col bg-main">
-            <div className="flex-grow flex-col w-full p-6 flex flex-col">
+            <div className="flex-grow flex-col w-full p-6 flex">
                 {content()}
             </div>
         </div>

@@ -7,12 +7,12 @@ const button_colors = {
     danger: 'bg-red-900 border-red-600 hover:bg-red-700 focus:bg-red-700',
 }
 
-export default function Button({type, disabled, on_click, children}) {
+export default function Button({type, disabled, onClick: onClick, children}) {
     let color_classes = button_colors[type];
     if (!color_classes) color_classes = button_colors.default;
 
     return (
-        <button disabled={disabled} className={"select-none text-sm font-medium-none border rounded text-gray-300 hover:text-white py-1.5 px-3 " + color_classes + (disabled ? " opacity-30" : "")} onClick={on_click}>
+        <button disabled={disabled} className={"select-none text-sm font-medium-none border rounded text-gray-300 hover:text-white py-1.5 px-3 " + color_classes + (disabled ? " opacity-30" : "")} onClick={onClick}>
             {children}
         </button>
     );
