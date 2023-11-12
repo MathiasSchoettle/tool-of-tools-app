@@ -621,7 +621,7 @@ function Card({deck, card, answer_card, hide_answer, set_hide_answer}) {
 
         return (
             <>
-                <div onClick={() => set_hide_answer(false)} className="grow cursor-pointer p-1 flex rounded-md flex-col items-center text-4xl text-center break-words text-neutral-200 justify-center items-center">
+                <div onClick={() => set_hide_answer(false)} className="grow cursor-pointer p-1 flex rounded-md flex-col items-center text-4xl text-center break-words text-neutral-200 justify-center">
                     {card.content.question}
                 </div>
                 <animated.div style={answer_props} className="flex overflow-hidden flex-col items-center justify-center">

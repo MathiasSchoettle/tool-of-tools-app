@@ -1,6 +1,6 @@
 import ReactDom from 'react-dom'
-import {animated, useSpring, useTransition} from "react-spring";
-import {useEffect, useRef} from "react";
+import {animated, useTransition} from "react-spring";
+import {useRef} from "react";
 
 export default function Modal({open, doClose, children}) {
 
