@@ -1,7 +1,7 @@
 import {monthName} from '../utils/DateUtils'
 import {ChevronDown} from 'lucide-react'
 import React, {createContext, useState} from 'react'
-import IconButton from '../inputs/IconButton'
+import IconButton from '../inputs/button/IconButton'
 import MonthView from "./MonthView";
 
 export const ResetContext = createContext(null);

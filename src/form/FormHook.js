@@ -53,8 +53,6 @@ export function useForm() {
 
 			inputs.current.forEach((v, k) => {
 
-				console.log(v,k)
-
 				if (!e.target[k]) return;
 
 				let message = errorMessage(e.target[k]);

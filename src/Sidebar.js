@@ -1,4 +1,3 @@
-import IconButton from './inputs/IconButton'
 import {
     CalendarDays,
     FileBadge,
@@ -9,6 +8,7 @@ import {
     Terminal,
 } from 'lucide-react'
 import { animated, useTransition } from 'react-spring'
+import IconButton from "./inputs/button/IconButton";
 
 export default function Sidebar({ opened, set_panel }) {
     const transition = useTransition(opened, {

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import Button from "../inputs/Button";
+import Button from "../inputs/button/Button";
 import Modal from "../modal/Modal";
 import {useSpring, animated} from "react-spring";
 import {

@@ -1,6 +1,7 @@
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 import { Check } from 'lucide-react'
 
+// FIXME ability to post it in forms
 export default function CheckBoxInput({title, isChecked, setChecked}) {
 	const handleClick = () => {
 		setChecked(prev => !prev);

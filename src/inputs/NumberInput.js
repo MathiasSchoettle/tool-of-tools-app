@@ -1,18 +1,7 @@
 import React, {useEffect, useState} from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 
-export default function NumberInput({
-										name,
-										onChange,
-										errors,
-										required = false,
-										disabled = false,
-										min = 0,
-										max = Infinity,
-										initial,
-										step = 1,
-										autofocus = false,
-									}) {
+export default function NumberInput({name, onChange, errors, label, required = false, disabled = false, min = 0, max = Infinity, initial, step = 1, autofocus = false,}) {
 
 	const [validity, setValidity] = useState({valid: true, error: ''});
 
@@ -36,9 +25,9 @@ export default function NumberInput({
 	return (
 		<div className="w-full flex flex-col">
 
-			{name && <div className="flex justify-between h-5 mb-1 text-xs">
+			{label && <div className="flex justify-between h-5 mb-1 text-xs">
 				<div className="flex items-end h-full pl-1">
-					<div className="text-dp-24">{name}</div>
+					<div className="text-dp-24">{label}</div>
 					{required ? <div className="text-xs flex items-center pl-0.5 font-bold bg text-mn-500">*</div> : ''}
 				</div>
 				{!validity.valid && (

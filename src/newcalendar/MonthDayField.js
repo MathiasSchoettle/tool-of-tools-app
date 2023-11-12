@@ -37,8 +37,7 @@ export default function MonthDayField({events, date, month}) {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
-		console.log(JSON.stringify(Object.fromEntries(formData)))
-		// alert(JSON.stringify(Object.fromEntries(formData)));
+		console.log(Object.fromEntries(formData));
 		closeModal();
 	};
 

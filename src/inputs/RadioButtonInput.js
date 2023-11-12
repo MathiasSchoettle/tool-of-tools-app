@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 
-export default function RadioButtonInput({name, value, checked, onChange}) {
+export default function RadioButtonInput({label, value, checked, onChange}) {
 	const changed = () => {
 		onChange(value);
 	}
@@ -23,7 +23,7 @@ export default function RadioButtonInput({name, value, checked, onChange}) {
 			</div>
 
 			<div>
-				{name}
+				{label}
 			</div>
 		</div>
 	);

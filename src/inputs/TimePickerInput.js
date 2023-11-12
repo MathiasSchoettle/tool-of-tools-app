@@ -1,13 +1,7 @@
 import React, {useEffect, useState} from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 
-export default function TimePickerInput({
-											name,
-											onChange,
-											errors,
-											required,
-											disabled
-										}) {
+export default function TimePickerInput({name, onChange, errors, label, required, disabled}) {
 
 	const [validity, setValidity] = useState({valid: true, error: ''});
 
@@ -31,9 +25,9 @@ export default function TimePickerInput({
 
 	return (
 		<div className="w-full flex flex-col">
-			<div className="flex justify-between text-xs h-5 mb-1">
+			{label && <div className="flex justify-between text-xs h-5 mb-1">
 				<div className="flex items-end h-full pl-1">
-					<div className={labelClasses}>{name}</div>
+					<div className={labelClasses}>{label}</div>
 					{required ? <div className="text-xs flex items-center pl-0.5 font-bold bg text-mn-500">*</div> : ''}
 				</div>
 				{!validity.valid && (
@@ -41,7 +35,8 @@ export default function TimePickerInput({
 						{validity.error}
 					</div>
 				)}
-			</div>
+			</div>}
+
 			<input type="time" disabled={disabled} name={name} required={required} onChange={onChange}
 				   className={inputClasses}/>
 		</div>

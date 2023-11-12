@@ -1,12 +1,8 @@
 import React, {useState} from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 
-// TODO make nicer
-export default function ToggleInput({
-										  name,
-										  errorMessage,
-										  onChange,
-									  }) {
+// FIXME improve and update for forms
+export default function ToggleInput({name, errorMessage, onChange,}) {
 
 	const [checked, setChecked] = useState(false);
 

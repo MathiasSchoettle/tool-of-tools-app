@@ -1,16 +1,16 @@
 import {CalendarPlus, X} from "lucide-react";
-import IconButton from "../inputs/IconButton";
+import IconButton from "../inputs/button/IconButton";
 import TextInput from "../inputs/TextInput";
 import TextAreaInput from "../inputs/TextAreaInput";
-import DefaultButton from "../inputs/DefaultButton";
-import SuccessButton from "../inputs/SuccessButton";
+import DefaultButton from "../inputs/button/DefaultButton";
+import SuccessButton from "../inputs/button/SuccessButton";
 import React, {useState} from "react";
 import CheckBoxInput from "../inputs/CheckBoxInput";
 import DatePickerInput from "../inputs/DatePickerInput";
 import TimePickerInput from "../inputs/TimePickerInput";
 import NumberInput from "../inputs/NumberInput";
 import MultiSelectInput from "../inputs/MultiSelectInput";
-import NewSelectInput from "../inputs/NewSelectInput";
+import SelectInput from "../inputs/SelectInput";
 
 
 const items = [
@@ -97,36 +97,22 @@ function options() {
 	return arr;
 }
 
-function RecurrencePart() {
-
-	const options = [
-		{
-			id: 0,
-			value: "After"
-		},
-		{
-			id: 1,
-			value: "On"
-		},
-		{
-			id: 2,
-			value: "Never"
-		}
-	]
-
-	return (
-		<div className="flex gap-2">
-			<NewSelectInput name="Recurrence end" initial={0} options={options}/>
-			<NumberInput name="Number of repetitions"></NumberInput>
-		</div>
-	);
-}
-
+// FIXME move modal stuff out of here (title of modal and close buttons)
+// FIXME move useForm into here
 export default function EventForm({register, onSubmit, closeModal}) {
 
 	const [fullDay, setFullDay] = useState(false);
 	const [recurring, setRecurring] = useState(false);
-	const [recurrence, setRecurrence] = useState("")
+	const [recurrence, setRecurrence] = useState(0)
+	const [recurrenceEndType, setRecurrenceEndType] = useState(0);
+
+	const setRecurrenceId = (value) => {
+		setRecurrence(value.id);
+	};
+
+	const setRecurrenceEndId = (value) => {
+		setRecurrenceEndType(value.id);
+	};
 
 	return (
 		<form method="post" noValidate onSubmit={onSubmit} spellCheck={false}>
@@ -145,26 +131,26 @@ export default function EventForm({register, onSubmit, closeModal}) {
 				<div className="flex gap-4">
 
 					<div className="flex flex-col flex-1">
-						<TextInput {...register("Title")} autofocus required />
-						<TextAreaInput {...register("Description")} rows={3}/>
+						<TextInput {...register("title")} label="Title" autofocus/>
+						<TextAreaInput {...register("description")} label="Description"/>
 
 						<div className="flex gap-2">
-							<TextInput {...register("Location")}/>
-							<TextInput {...register("Link")}/>
+							<TextInput {...register("location")} label="Location"/>
+							<TextInput {...register("link")} label="Link"/>
 						</div>
 
-						<NewSelectInput {...register("Category")} required options={options()}/>
+						<SelectInput {...register("category_id")} label={"Category"} required options={options()}/>
 					</div>
 
 					<div className="flex flex-1 flex-col">
-						<div className="flex gap-2">
-							<DatePickerInput {...register("Start Date")} required/>
-							{!fullDay && <TimePickerInput {...register("Start Time")} required/>}
+						<div className="flex gap-2 w-full">
+							<DatePickerInput {...register("start_date")} label="Start Date"/>
+							{!fullDay && <TimePickerInput {...register("start_time")} label="Start Time" required/>}
 						</div>
 
-						<div className="flex gap-2">
-							<DatePickerInput {...register("End Date")} required/>
-							{!fullDay && <TimePickerInput {...register("End Time")} required/>}
+						<div className="flex gap-2 w-full">
+							<DatePickerInput {...register("end_date")} label="End Date"/>
+							{!fullDay && <TimePickerInput {...register("end_time")} label="End Time" required/>}
 						</div>
 
 						<div className="flex gap-2 w-full">
@@ -177,17 +163,22 @@ export default function EventForm({register, onSubmit, closeModal}) {
 							<div className="flex w-full gap-2 items-center">
 								<div className="pl-1">Repeat every</div>
 								<div className="w-16">
-									<NumberInput initial={1} min={1}/>
+									<NumberInput {...register("offset")} initial={1} min={1}/>
 								</div>
 
 								<div className="w-20">
-									<NewSelectInput initial={0} options={[{id: 0, value: "Daily"}, {id: 1, value: "Weekly"}, {id: 2, value: "Monthly"}, {id: 3, value: "Yearly"}]}/>
+									<SelectInput listener={setRecurrenceId} {...register("recurrence_type")} initial={0} options={[{id: 0, value: "Day"}, {id: 1, value: "Week"}, {id: 2, value: "Month"}, {id: 3, value: "Year"}]}/>
 								</div>
 							</div>
 
-							<MultiSelectInput name={"Selected Days"} items={items}/>
+							{recurrence === 1 && <MultiSelectInput {...register("week_days")} items={items}/>}
 
-							<RecurrencePart/>
+							<div className="flex gap-2">
+								<SelectInput listener={setRecurrenceEndId} label="Recurrence end" initial={0} options={[{id: 0, value: "After"}, {id: 1, value: "On"}, {id: 2, value: "Never"}]}/>
+								{recurrenceEndType === 0 && <NumberInput {...register("occurrences")} required min={1} initial={1} label="Repetition count"/>}
+								{recurrenceEndType === 1 && <DatePickerInput {...register("recurrence_end_date")} required label="Until"/>}
+								{recurrenceEndType === 2 && <div className="w-full"/>}
+							</div>
 						</div>}
 					</div>
 				</div>

@@ -1,16 +1,7 @@
 import React, {useEffect, useState} from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 
-export default function TextInput({
-									  name,
-									  onChange,
-									  errors,
-									  required = false,
-									  minLength = 0,
-									  maxLength = Infinity,
-									  pattern,
-									  autofocus = false,
-								  }) {
+export default function TextInput({name, onChange, errors, label, required = false, minLength = 0, maxLength = Infinity, pattern, autofocus = false,}) {
 
 	const [validity, setValidity] = useState({valid: true, error: ''});
 
@@ -32,9 +23,9 @@ export default function TextInput({
 
 	return (
 		<div className="w-full flex flex-col">
-			<div className="flex justify-between text-xs h-5 mb-1">
+			{label && <div className="flex justify-between text-xs h-5 mb-1">
 				<div className="flex items-end h-full pl-1">
-					<div className="text-dp-24">{name}</div>
+					<div className="text-dp-24">{label}</div>
 					{required ? <div className="text-xs flex items-center pl-0.5 font-bold bg text-mn-500">*</div> : ''}
 				</div>
 				{!validity.valid && (
@@ -42,7 +33,7 @@ export default function TextInput({
 						{validity.error}
 					</div>
 				)}
-			</div>
+			</div>}
 
 			<input type="text" pattern={pattern} name={name} className={inputClasses} onChange={handleOnChange}
 				   required={required} minLength={minLength} maxLength={maxLength} autoComplete="off"

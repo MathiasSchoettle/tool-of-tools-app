@@ -1,6 +1,6 @@
 import React from 'react'
 import { Minus, PanelLeft, Square, XIcon } from 'lucide-react'
-import IconButton from './inputs/IconButton'
+import IconButton from './inputs/button/IconButton'
 
 export default function TopBar({ toggle_sidebar }) {
     return (

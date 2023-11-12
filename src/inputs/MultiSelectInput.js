@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 
-
+// FIXME call it differently maybe
 function SelectButton({text, callable, selected}) {
 
 	let classes = classBuilder(
@@ -16,7 +16,7 @@ function SelectButton({text, callable, selected}) {
 	)
 }
 
-export default function MultiSelectInput({name, items, primary = 0}) {
+export default function MultiSelectInput({name, items, primary = 0, label}) {
 
 	const fill = (length, first) => {
 		const a = new Array(length).fill(false);
@@ -52,11 +52,11 @@ export default function MultiSelectInput({name, items, primary = 0}) {
 
 	return (
 		<div className="w-full flex flex-col">
-			<div className="flex justify-between text-xs h-5 mb-1">
+			{label && <div className="flex justify-between text-xs h-5 mb-1">
 				<div className="flex items-end h-full pl-1">
-					<div className="text-dp-24">{name}</div>
+					<div className="text-dp-24">{label}</div>
 				</div>
-			</div>
+			</div>}
 
 			<div className="flex text-dp-24 text-xs gap-2">
 				{getItems()}

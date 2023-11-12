@@ -1,17 +1,7 @@
 import React, {useEffect, useState} from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 
-export default function TextAreaInput({
-										  name,
-										  errorMessage,
-										  onChange,
-										  errors,
-										  required = false,
-										  minLength = 0,
-										  maxLength = Infinity,
-										  autofocus = false,
-										  rows = 3
-									  }) {
+export default function TextAreaInput({name, errorMessage, onChange, label, errors, required = false, minLength = 0, maxLength = Infinity, autofocus = false, rows = 3}) {
 
 	const [validity, setValidity] = useState({valid: true, error: ''});
 
@@ -33,9 +23,9 @@ export default function TextAreaInput({
 
 	return (
 		<div className="w-full flex flex-col">
-			<div className="flex justify-between text-xs h-5 mb-1">
+			{label && <div className="flex justify-between text-xs h-5 mb-1">
 				<div className="flex items-end h-full pl-1">
-					<div className="text-dp-24">{name}</div>
+					<div className="text-dp-24">{label}</div>
 					{required ? <div className="text-xs flex items-center pl-0.5 font-bold bg text-mn-500">*</div> : ''}
 				</div>
 				{!validity.valid && (
@@ -43,7 +33,7 @@ export default function TextAreaInput({
 						{validity.error}
 					</div>
 				)}
-			</div>
+			</div>}
 
 			<textarea name={name} className={inputClasses} onChange={handleOnChange}
 					  required={required} minLength={minLength} maxLength={maxLength} autoComplete="off"
