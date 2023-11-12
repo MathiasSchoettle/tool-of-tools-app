@@ -9,15 +9,11 @@ export const initialContextMenu = {
 export default function ContextMenu({content, closeMenu, children}) {
 	return (
 		<>
-			{content.open && (
-				<ContextMenuInternal
-					x={content.x}
-					y={content.y}
-					closeMenu={closeMenu}
-				>
+			{content.open &&
+				<ContextMenuInternal x={content.x} y={content.y} closeMenu={closeMenu}>
 					{children}
 				</ContextMenuInternal>
-			)}
+			}
 		</>
 	);
 }

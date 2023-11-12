@@ -1,16 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
+import useValidity from "./util/ValidityFormHook";
+import InputLabel from "./util/InputLabel";
 
-export default function TextInput({name, onChange, errors, label, required = false, minLength = 0, maxLength = Infinity, pattern, autofocus = false,}) {
+export default function TextInput({name, onChange, errors, label, required, autofocus, minLength = 0, maxLength = Infinity, pattern}) {
 
-	const [validity, setValidity] = useState({valid: true, error: ''});
-
-	useEffect(() => {
-		setValidity({
-			valid: !errors || !errors?.length > 0,
-			error: errors?.[0].error
-		});
-	}, [errors]);
+	const validity = useValidity(errors);
 
 	const handleOnChange = (e) => {
 		onChange?.(e);
@@ -23,21 +18,11 @@ export default function TextInput({name, onChange, errors, label, required = fal
 
 	return (
 		<div className="w-full flex flex-col">
-			{label && <div className="flex justify-between text-xs h-5 mb-1">
-				<div className="flex items-end h-full pl-1">
-					<div className="text-dp-24">{label}</div>
-					{required ? <div className="text-xs flex items-center pl-0.5 font-bold bg text-mn-500">*</div> : ''}
-				</div>
-				{!validity.valid && (
-					<div className="h-full text-xs text-red-400 pr-1 flex items-end">
-						{validity.error}
-					</div>
-				)}
-			</div>}
+			<InputLabel labelName={label} validity={validity} required={required}/>
 
-			<input type="text" pattern={pattern} name={name} className={inputClasses} onChange={handleOnChange}
-				   required={required} minLength={minLength} maxLength={maxLength} autoComplete="off"
-				   autoFocus={autofocus}/>
+			<input type="text" name={name} className={inputClasses} onChange={handleOnChange}
+				   required={required} autoFocus={autofocus} autoComplete="off"
+				   pattern={pattern} minLength={minLength} maxLength={maxLength}/>
 		</div>
 	);
 }

@@ -28,6 +28,7 @@ function errorMessage(target) {
 	return 'unknown error';
 }
 
+// FIXME rename submit to something like createSubmit to better reflect the usage
 export function useForm() {
 	const inputs = useRef(new Map());
 	const [errors, setErrors] = useState(new Map());

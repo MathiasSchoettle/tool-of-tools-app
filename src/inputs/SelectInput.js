@@ -2,20 +2,14 @@ import React, {useEffect, useRef, useState} from "react";
 import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
 import {ChevronDown} from "lucide-react";
 import {useOnClickOutside} from "../utils/ClickOutsideHook";
+import InputLabel from "./util/InputLabel";
+import useValidity from "./util/ValidityFormHook";
 
-export default function NewSelectInput({name, onChange, listener, errors, label, required = false, autofocus = false, options, initial}) {
+export default function SelectInput({name, onChange, errors, label, required, autofocus, listener, options, initial}) {
 
 	const [expanded, setExpanded] = useState(false)
 	const [selected, setSelected] = useState(initial)
-
-	const [validity, setValidity] = useState({valid: true, error: ''});
-
-	useEffect(() => {
-		setValidity({
-			valid: !errors || !errors?.length > 0,
-			error: errors?.[0].error
-		});
-	}, [errors]);
+	const validity = useValidity(errors);
 
 	const contextMenuRef = useRef(null);
 	useOnClickOutside(contextMenuRef, () => setExpanded(false));
@@ -48,7 +42,8 @@ export default function NewSelectInput({name, onChange, listener, errors, label,
 	};
 
 	let inputClasses = classBuilder(
-		'w-full relative flex items-center justify-between px-2 min-h-[32px] rounded shadow-md bg-dp-08 cursor-pointer border',
+		'w-full rounded border shadow-md bg-dp-08 px-2 text-dp-32 text-xs h-8',
+		'relative flex items-center justify-between min-h-[32px] cursor-pointer',
 		cond(validity.valid, 'border-dp-12 focus:border-dp-16', 'border-red-500 border-opacity-30 focus:border-red-400')
 	);
 
@@ -57,27 +52,14 @@ export default function NewSelectInput({name, onChange, listener, errors, label,
 		cond(!expanded, 'hidden')
 	);
 
+	const expand = () => setExpanded(true);
+	const collapse = () => setExpanded(false);
+
 	return (
 		<div className="w-full text-xs text-dp-32">
-			{label && <div className="flex justify-between text-xs h-5 mb-1">
-				<div className="flex items-end h-full pl-1">
-					<div className="text-dp-24">{label}</div>
-					{required ? <div className="text-xs flex items-center pl-0.5 font-bold bg text-mn-500">*</div> : ''}
-				</div>
-				{!validity.valid && (
-					<div className="h-full text-xs text-red-400 pr-1 flex items-end">
-						{validity.error}
-					</div>
-				)}
-			</div>}
+			<InputLabel labelName={label} validity={validity} required={required}/>
 
-			<div tabIndex="0"
-				 autoFocus={autofocus}
-				 onFocus={() => setExpanded(true)}
-				 onBlur={() => setExpanded(false)}
-				 onClick={() => setExpanded(true)}
-				 className={inputClasses}>
-
+			<div tabIndex="0" className={inputClasses} autoFocus={autofocus} onFocus={expand} onBlur={collapse} onClick={expand}>
 				{selection()}
 
 				<ChevronDown size={16}/>
@@ -89,7 +71,7 @@ export default function NewSelectInput({name, onChange, listener, errors, label,
 				</div>
 			</div>
 
-			<select onChange={onChange} name={name} required={required} className="hidden">
+			<select name={name} className="hidden" onChange={onChange} required={required}>
 				<option value={getId()}>Hello</option>
 			</select>
 		</div>

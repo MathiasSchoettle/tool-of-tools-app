@@ -105,13 +105,12 @@ export default function EventForm({onSubmit}) {
 	const [recurrence, setRecurrence] = useState(0)
 	const [recurrenceEndType, setRecurrenceEndType] = useState(0);
 
-	const [register, submit, clearErrors] = useForm();
+	const [register, submit] = useForm();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 		console.log(Object.fromEntries(formData));
-		clearErrors();
 		onSubmit();
 	};
 
@@ -140,8 +139,8 @@ export default function EventForm({onSubmit}) {
 				<div className="flex gap-4">
 
 					<div className="flex flex-col flex-1">
-						<TextInput {...register("title")} label="Title" autofocus/>
-						<TextAreaInput {...register("description")} label="Description"/>
+						<TextInput {...register("title")} label="Title" autofocus required/>
+						<TextAreaInput {...register("description")} required label="Description"/>
 
 						<div className="flex gap-2">
 							<TextInput {...register("location")} label="Location"/>
