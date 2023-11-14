@@ -33,10 +33,16 @@ export function useForm() {
 	const inputs = useRef(new Map());
 	const [errors, setErrors] = useState(new Map());
 
-	const register = (name) => {
+	const register = (name, listener) => {
+
 		let onChange = (e) => {
 			const target = e.target;
-			inputs.current.get(target.name).value = target.value;
+			const value = target?.value;
+			if (value && inputs.current.get(target.name)) {
+				inputs.current.get(target.name).value = value;
+			}
+
+			listener?.(value);
 		}
 
 		inputs.current.set(name, {
