@@ -39,6 +39,8 @@ export default function SelectInput({name, onChange, errors, label, required, au
 	);
 
 	return (
+		// FIXME the usage of the custom input here is a bit scuffed, as it only expects one child to be passed in
+		//  we should rework it to make it usable with custom inputs like this select
 		<CustomInput errors={errors} label={label} attributes={attributes}>
 			<input ref={ref} value={selected !== undefined ? options[selected].id : ""} className="hidden"/>
 
