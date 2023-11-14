@@ -114,10 +114,6 @@ export default function EventForm({onSubmit, date}) {
 		onSubmit();
 	};
 
-	const setRecurrenceEndId = (value) => {
-		setRecurrenceEndType(value.id);
-	};
-
 	return (
 		<form method="post" noValidate onSubmit={submit(handleSubmit)} spellCheck={false}>
 
@@ -180,10 +176,10 @@ export default function EventForm({onSubmit, date}) {
 
 							<div className="flex gap-2">
 								{/*FIXME make this nicer*/}
-								<SelectInput listener={setRecurrenceEndId} label="Recurrence end" initial={0} options={[{id: 0, value: "After"}, {id: 1, value: "On"}, {id: 2, value: "Never"}]}/>
-								{recurrenceEndType === 0 && <NumberInput {...register("occurrences")} required min={1} initial={1} label="Repetition count"/>}
-								{recurrenceEndType === 1 && <DatePickerInput {...register("recurrence_end_date")} required label="Until"/>}
-								{recurrenceEndType === 2 && <div className="w-full"/>}
+								<SelectInput onChange={(e) => setRecurrenceEndType(e.target.value)} label="Recurrence end" initial={0} options={[{id: 0, value: "After"}, {id: 1, value: "On"}, {id: 2, value: "Never"}]}/>
+								{recurrenceEndType === "0" && <NumberInput {...register("occurrences")} required defaultValue={1} label="Repetition count"/>}
+								{recurrenceEndType === "1" && <DatePickerInput {...register("recurrence_end_date")} required label="Until"/>}
+								{recurrenceEndType === "2" && <div className="w-full"/>}
 							</div>
 						</div>}
 					</div>
