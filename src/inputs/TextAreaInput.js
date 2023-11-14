@@ -1,28 +1,21 @@
 import React from "react";
-import classBuilder, {cond} from "../utils/ConditionalClassBuilder";
-import useValidity from "./util/ValidityFormHook";
-import InputLabel from "./util/InputLabel";
+import CustomInput from "./util/CustomInput";
 
-export default function TextAreaInput({name, onChange, errors, label, required, autofocus, minLength = 0, maxLength = Infinity, rows = 3}) {
+export default function TextAreaInput({name, onChange, errors, label, required, disabled, autofocus, minLength = 0, maxLength = Infinity, rows = 3}) {
 
-	const validity = useValidity(errors);
-
-	const handleOnChange = (e) => {
-		onChange?.(e);
-	}
-
-	let inputClasses = classBuilder(
-		'w-full rounded border shadow-md bg-dp-08 px-2 py-1.5 text-dp-32 text-xs resize-none',
-		cond(validity.valid, 'border-dp-12 focus:border-dp-16', 'border-red-500 border-opacity-30 focus:border-red-400')
-	);
+	const attributes = {
+		name: name,
+		required: required,
+		disabled: disabled,
+		autoFocus: autofocus,
+		minLength: minLength,
+		maxLength: maxLength,
+		rows: rows
+	};
 
 	return (
-		<div className="w-full flex flex-col">
-			<InputLabel labelName={label} validity={validity} required={required}/>
-
-			<textarea name={name} className={inputClasses} onChange={handleOnChange}
-					  required={required} autoFocus={autofocus}
-					  autoComplete="off" rows={rows} minLength={minLength} maxLength={maxLength}/>
-		</div>
+		<CustomInput onChange={onChange} errors={errors} label={label} attributes={attributes} grow>
+			<textarea className="resize-none py-1.5"/>
+		</CustomInput>
 	);
 }

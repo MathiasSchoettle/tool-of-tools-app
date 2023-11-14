@@ -16,6 +16,7 @@ function SelectButton({text, callable, selected}) {
 	)
 }
 
+// FIXME make this a default weekday selector instead of a generic multiselect because when would i ever reuse this?
 export default function MultiSelectInput({name, items, primary = 0, label}) {
 
 	const fill = (length, first) => {

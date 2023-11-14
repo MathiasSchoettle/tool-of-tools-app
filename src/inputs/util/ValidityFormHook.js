@@ -7,7 +7,7 @@ export default function useValidity(errors) {
 	useEffect(() => {
 		setValidity({
 			valid: !errors || !errors?.length > 0,
-			error: errors?.[0].error
+			error: errors?.[0]?.error
 		});
 	}, [errors]);
 
