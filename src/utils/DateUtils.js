@@ -25,16 +25,16 @@ export function sameDay(first, second) {
  * date to format of YYYY-MM-DD
  */
 export function dateToIsoString(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+    return `${ date.getFullYear() }-${ pad(date.getMonth() + 1) }-${ pad(date.getDate()) }`;
 }
 
 /**
  * date to format of HH:mm
  */
 export function dateToShortIsoTime(date) {
-    return `${date.getHours()}:${date.getMinutes()}`;
+    return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function pad(value) {
+    return String(value).padStart(2, '0');
 }
