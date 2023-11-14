@@ -105,7 +105,6 @@ export default function EventForm({onSubmit, date}) {
 	const [recurring, setRecurring] = useState(false);
 	const [recurrence, setRecurrence] = useState(0)
 	const [recurrenceEndType, setRecurrenceEndType] = useState(0);
-
 	const [register, submit] = useForm();
 
 	const handleSubmit = (e) => {
@@ -113,10 +112,6 @@ export default function EventForm({onSubmit, date}) {
 		const formData = new FormData(e.target);
 		console.log(Object.fromEntries(formData));
 		onSubmit();
-	};
-
-	const setRecurrenceId = (value) => {
-		setRecurrence(value.id);
 	};
 
 	const setRecurrenceEndId = (value) => {
@@ -176,13 +171,15 @@ export default function EventForm({onSubmit, date}) {
 								</div>
 
 								<div className="w-20">
-									<SelectInput listener={setRecurrenceId} {...register("recurrence_type")} initial={0} options={[{id: 0, value: "Day"}, {id: 1, value: "Week"}, {id: 2, value: "Month"}, {id: 3, value: "Year"}]}/>
+									<SelectInput {...register("recurrence_type", setRecurrence)} initial={0} options={[{id: 0, value: "Day"}, {id: 1, value: "Week"}, {id: 2, value: "Month"}, {id: 3, value: "Year"}]}/>
 								</div>
 							</div>
 
-							{recurrence === 1 && <MultiSelectInput {...register("week_days")} items={items}/>}
+							{/*FIXME make this nicer*/}
+							{recurrence === "1" && <MultiSelectInput {...register("week_days")} items={items}/>}
 
 							<div className="flex gap-2">
+								{/*FIXME make this nicer*/}
 								<SelectInput listener={setRecurrenceEndId} label="Recurrence end" initial={0} options={[{id: 0, value: "After"}, {id: 1, value: "On"}, {id: 2, value: "Never"}]}/>
 								{recurrenceEndType === 0 && <NumberInput {...register("occurrences")} required min={1} initial={1} label="Repetition count"/>}
 								{recurrenceEndType === 1 && <DatePickerInput {...register("recurrence_end_date")} required label="Until"/>}
