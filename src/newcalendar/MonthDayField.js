@@ -58,7 +58,7 @@ export default function MonthDayField({events, date, month}) {
 			</div>
 
 			<Modal open={modalOpen} doClose={closeModal}>
-				<EventForm onSubmit={closeModal}/>
+				<EventForm onSubmit={closeModal} date={date}/>
 			</Modal>
 
 			<ContextMenu content={contextMenu} closeMenu={closeContextMenu}>

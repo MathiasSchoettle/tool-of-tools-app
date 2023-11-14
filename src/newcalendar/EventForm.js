@@ -12,6 +12,7 @@ import NumberInput from "../inputs/NumberInput";
 import MultiSelectInput from "../inputs/MultiSelectInput";
 import SelectInput from "../inputs/SelectInput";
 import {useForm} from "../form/FormHook";
+import {dateToIsoString, dateToShortIsoTime} from "../utils/DateUtils";
 
 const items = [
 	{
@@ -98,7 +99,7 @@ function options() {
 }
 
 // FIXME move modal stuff out of here (title of modal and close buttons)
-export default function EventForm({onSubmit}) {
+export default function EventForm({onSubmit, date}) {
 
 	const [fullDay, setFullDay] = useState(false);
 	const [recurring, setRecurring] = useState(false);
@@ -152,13 +153,13 @@ export default function EventForm({onSubmit}) {
 
 					<div className="flex flex-1 flex-col">
 						<div className="flex gap-2 w-full">
-							<DatePickerInput {...register("start_date")} label="Start Date"/>
-							{!fullDay && <TimePickerInput {...register("start_time")} label="Start Time" required/>}
+							<DatePickerInput {...register("start_date")} label="Start Date" defaultValue={dateToIsoString(date)}/>
+							<TimePickerInput {...register("start_time")} label="Start Time" disabled={fullDay} defaultValue={dateToShortIsoTime(new Date())}/>
 						</div>
 
 						<div className="flex gap-2 w-full">
-							<DatePickerInput {...register("end_date")} label="End Date"/>
-							{!fullDay && <TimePickerInput {...register("end_time")} label="End Time" required/>}
+							<DatePickerInput {...register("end_date")} label="End Date" defaultValue={dateToIsoString(date)}/>
+							<TimePickerInput {...register("end_time")} label="End Time" disabled={fullDay} defaultValue={dateToShortIsoTime(new Date())}/>
 						</div>
 
 						<div className="flex gap-2 w-full">
@@ -171,7 +172,7 @@ export default function EventForm({onSubmit}) {
 							<div className="flex w-full gap-2 items-center">
 								<div className="pl-1">Repeat every</div>
 								<div className="w-16">
-									<NumberInput {...register("offset")} initial={1} min={1}/>
+									<NumberInput {...register("offset")} defaultValue={1}/>
 								</div>
 
 								<div className="w-20">
