@@ -28,16 +28,23 @@ function errorMessage(target) {
 	return 'unknown error';
 }
 
-// FIXME rename submit to something like createSubmit to better reflect the usage
 export function useForm() {
 	const inputs = useRef(new Map());
 	const [errors, setErrors] = useState(new Map());
 
+	/**
+	 * Register an input to the form hook
+	 *
+	 * @param name The key of the submitted value in the form
+	 * @param listener An optional listener for the input onChange event
+	 * @returns {onChange, name, errors} attributes for the input
+	 */
 	const register = (name, listener) => {
 
 		let onChange = (e) => {
 			const target = e.target;
 			const value = target?.value;
+
 			if (value && inputs.current.get(target.name)) {
 				inputs.current.get(target.name).value = value;
 			}
@@ -53,7 +60,15 @@ export function useForm() {
 		return {name: name, onChange: onChange, errors: errors.get(name)};
 	};
 
-	const submit = (handleSubmit) => {
+	/**
+	 * Creates a function which is passed to the controlled form submit attribute
+	 * It will handle the default form validation e.g. required fields
+	 * If no errors in the form exist the passed handleSubmit function is called
+	 *
+	 * @param handleSubmit function which is called when the form validation succeeds
+	 * @returns the form submit function
+	 */
+	const createSubmit = (handleSubmit) => {
 		return (e) => {
 			e.preventDefault();
 			let err = new Map();
@@ -78,5 +93,10 @@ export function useForm() {
 		};
 	};
 
-	return [register, submit, () => setErrors(new Map())];
+	const addError = () => {
+		// FIXME a way of adding errors from custom validations
+		console.error("NOT IMPLEMENTED YET");
+	};
+
+	return [register, createSubmit, addError];
 }

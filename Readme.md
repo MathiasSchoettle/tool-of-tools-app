@@ -1,12 +1,9 @@
 ## TODOs:
 
 * Check why modal in monthDayField is being re rendered when opening and closing context menu
-* 
+
 * add missing features to input fields 
   * generic error message (data-error-message already exists in the form hook)
-
-### are our inputs currently not event controlled???
-#### do we need to also add the value attribute to the formhook and update it on change?
 
 * form hook
   * currently we are listening to the on change of input fields and immediately update the stored value

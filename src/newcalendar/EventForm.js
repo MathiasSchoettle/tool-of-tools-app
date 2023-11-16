@@ -105,7 +105,7 @@ export default function EventForm({onSubmit, date}) {
 	const [recurring, setRecurring] = useState(false);
 	const [recurrence, setRecurrence] = useState(0)
 	const [recurrenceEndType, setRecurrenceEndType] = useState(0);
-	const [register, submit] = useForm();
+	const [register, createSubmit] = useForm();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -115,7 +115,7 @@ export default function EventForm({onSubmit, date}) {
 	};
 
 	return (
-		<form method="post" noValidate onSubmit={submit(handleSubmit)} spellCheck={false}>
+		<form method="post" noValidate onSubmit={createSubmit(handleSubmit)} spellCheck={false}>
 
 			<div className="p-2 w-[700px] flex flex-col select-none gap-4">
 				<div className="flex w-full items-center justify-between pl-1 text-dp-24 ">
