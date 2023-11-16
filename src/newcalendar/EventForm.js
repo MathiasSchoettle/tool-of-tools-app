@@ -187,10 +187,8 @@ export default function EventForm({onSubmit, date}) {
 
 
 				<div className="flex justify-end gap-2">
-					<DefaultButton onClick={onSubmit}>Cancel</DefaultButton>
-					<SuccessButton type={"submit"}>
-						Save
-					</SuccessButton>
+					<DefaultButton onClick={onSubmit} content="Cancel"/>
+					<SuccessButton type={"submit"} content="Save"/>
 				</div>
 			</div>
 		</form>

@@ -1,9 +1,15 @@
 import React from 'react'
+import classBuilder, {cond} from "../../utils/ConditionalClassBuilder";
+import {InternalButton} from "./InternalButton";
 
-export default function SuccessButton({type = "button", disabled = false, onClick, children}) {
+export default function SuccessButton({type, disabled, onClick, content}) {
+
+	const classes = classBuilder(
+		'text-white bg-mn-700 shadow-md',
+		cond(!disabled, 'hover:bg-mn-600 hover:border-mn-500 focus:bg-mn-600 focus:border-mn-500 ')
+	);
+
 	return (
-		<button type={type} disabled={disabled} className="text-sm rounded bg-mn-700 hover:shadow-sm hover:bg-mn-600 focus:bg-mn-600 border border-transparent hover:border-mn-500 focus:border-mn-500 text-white font-medium h-fit py-1 px-3 transition duration-100" onClick={onClick}>
-			{children}
-		</button>
+		<InternalButton type={type} disabled={disabled} onClick={onClick} content={content} className={classes}/>
 	);
 }
