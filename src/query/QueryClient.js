@@ -1,13 +1,14 @@
+import { v4 as uuid } from 'uuid';
 
-// Fixme for register and deregister we are using a "name" to identify the callbacks
-//  we should have some sort of different hash to keep it sane?
 export default class QueryClient {
 
 	#cache = new Map();
 
 	constructor() {}
 
-	register(key, name, callback) {
+	register(key, callback) {
+		const hash = uuid();
+
 		if (!this.#cache.has(key)) {
 			this.#cache.set(key, {
 				callbacks: new Map(),
@@ -15,12 +16,14 @@ export default class QueryClient {
 			});
 		}
 
-		this.#cache.get(key).callbacks.set(name, callback);
+		this.#cache.get(key).callbacks.set(hash, callback);
+
+		return hash;
 	}
 
-	deregister(key, name) {
+	deregister(key, hash) {
 		if (this.#cache.has(key))
-			this.#cache.get(key).callbacks.delete(name);
+			this.#cache.get(key).callbacks.delete(hash);
 	}
 
 	cacheQuery(key, data) {

@@ -1,8 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {QueryContext} from "./QueryProvider";
 
-// fixme create a better hash value than the current name
-//  refactor fetch, refetch and and useEffect calls
+// fixme refactor fetch, refetch and and useEffect calls
 export default function useQuery(key, promise) {
 
 	const [status, setStatus] = useState("pending");
@@ -16,12 +15,10 @@ export default function useQuery(key, promise) {
 	};
 
 	useEffect(() => {
-		const name = "test" + Math.random();
 		queryClient.clearFromCache(key);
-		queryClient.register(key, name, callback);
-		fetch(true);
-
-		return () => queryClient.deregister(key, name);
+		const hash = queryClient.register(key, callback);
+		fetch();
+		return () => queryClient.deregister(key, hash);
 	}, []);
 
 	const fetch = () => {
