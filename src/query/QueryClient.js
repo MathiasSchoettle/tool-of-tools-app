@@ -1,42 +1,46 @@
+
 // Fixme for register and deregister we are using a "name" to identify the callbacks
 //  we should have some sort of different hash to keep it sane?
 export default class QueryClient {
 
-	#cachedQueries = new Map();
-	#callbacks = new Map();
+	#cache = new Map();
 
 	constructor() {}
 
 	register(key, name, callback) {
-		if (!this.#callbacks.has(key)) {
-			this.#callbacks.set(key, [{name: name, callback: callback}]);
+		if (!this.#cache.has(key)) {
+			this.#cache.set(key, {
+				callbacks: new Map(),
+				data: undefined
+			});
 		}
-		else {
-			let array = this.#callbacks.get(key);
-			array.push({name: name, callback: callback});
-			this.#callbacks.set(key, array);
-		}
+
+		this.#cache.get(key).callbacks.set(name, callback);
 	}
 
 	deregister(key, name) {
-		const newArr = this.#callbacks.get(key).filter(element => element.name !== name);
-		this.#callbacks.set(key, newArr);
+		if (this.#cache.has(key))
+			this.#cache.get(key).callbacks.delete(name);
 	}
 
 	cacheQuery(key, data) {
-		this.#cachedQueries.set(key, data);
-		this.#callbacks.get(key)?.forEach(val => val?.callback(data));
+		const obj = this.#cache.get(key);
+		obj.data = data;
+		obj.callbacks.forEach((callback) => {
+			callback(obj.data);
+		});
 	}
 
 	clearFromCache(key) {
-		this.#cachedQueries.delete(key);
+		if (this.#cache.has(key))
+			this.#cache.get(key).data = undefined;
 	}
 
 	hasCacheFor(key) {
-		return this.#cachedQueries.has(key);
+		return this.#cache.get(key).data !== undefined;
 	}
 
 	getFromCache(key) {
-		return this.#cachedQueries.get(key);
+		return this.#cache.get(key).data;
 	}
 }
