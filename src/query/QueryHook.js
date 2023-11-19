@@ -1,7 +1,6 @@
 import {useContext, useEffect, useState} from "react";
 import {QueryContext} from "./QueryProvider";
 
-// fixme refactor fetch, refetch and and useEffect calls
 export default function useQuery(key, promise) {
 
 	const [status, setStatus] = useState("pending");
@@ -15,40 +14,37 @@ export default function useQuery(key, promise) {
 	};
 
 	useEffect(() => {
-		queryClient.clearFromCache(key);
 		const hash = queryClient.register(key, callback);
-		fetch();
+		fetchData();
 		return () => queryClient.deregister(key, hash);
 	}, []);
 
-	const fetch = () => {
-
-		if (queryClient.hasCacheFor(key)) {
-			setData(queryClient.getFromCache(key));
-			setStatus("success");
-			setError(undefined);
-			return;
-		}
+	const fetchData = () => {
+		queryClient.clearFromCache(key);
 
 		setStatus("pending");
 		setData(undefined)
 		setError(undefined);
 
+		callPromise(promise);
+	};
+
+	const callPromise = (promise) => {
 		promise()
-			.then((data) => {
+			.then(data => {
 				setData(data);
 				queryClient.cacheQuery(key, data);
 				setStatus("success");
 			})
-			.catch((err) => {
-				setError(err);
+			.catch(error => {
+				setError(error);
 				setStatus("error");
 			});
-	};
+	}
 
 	const refetch = () => {
 		queryClient.clearFromCache(key);
-		if (status !== "pending") fetch();
+		if (status !== "pending") fetchData();
 	};
 
 	return {
