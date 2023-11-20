@@ -1,6 +1,24 @@
 import {useContext, useEffect, useState} from "react";
 import {QueryContext} from "./QueryProvider";
 
+/**
+ * TODO
+ *  - if an error occurs when fetching new data all registered callbacks should be informed the data is invalid
+ *  	meaning the callback function should not just set the data but also set the error and status
+ *  - we should have an option to select the cache time we want
+ *  	it should not be hardcoded to CACHE_LIFETIME in the query client
+ *  - currently our default state is "pending". when the cache already contains data it should be set to "success"
+ *  	otherwise when rendering a component we have a slight flicker as it shows the pending status and updates
+ *  	to the success status very quickly
+ *
+ *  FIXME:
+ *  	- when mounting and unmounting a component very quickly we call the fetch data function often when another call
+ *  	is already in flight
+ *  	- we should have a way of checking if the query is currently fetching (isFetching, fetchStatus etc.)
+ *  	- https://tanstack.com/query/v4/docs/react/guides/queries#fetchstatus
+ *		- set a boolean flag in the query client somewhere maybe? when executing the promise maybe?
+ *
+ */
 export default function useQuery(key, promise) {
 
 	const [status, setStatus] = useState("pending");
@@ -20,13 +38,21 @@ export default function useQuery(key, promise) {
 	}, []);
 
 	const fetchData = () => {
-		queryClient.clearFromCache(key);
 
-		setStatus("pending");
-		setData(undefined)
-		setError(undefined);
+		if (queryClient.cacheIsStale(key)) {
+			queryClient.clearFromCache(key);
 
-		callPromise(promise);
+			setStatus("pending");
+			setData(undefined)
+			setError(undefined);
+
+			callPromise(promise);
+		} else {
+			setStatus("success");
+			setData(queryClient.getFromCache(key));
+			setError(undefined);
+		}
+
 	};
 
 	const callPromise = (promise) => {
@@ -43,7 +69,6 @@ export default function useQuery(key, promise) {
 	}
 
 	const refetch = () => {
-		queryClient.clearFromCache(key);
 		if (status !== "pending") fetchData();
 	};
 

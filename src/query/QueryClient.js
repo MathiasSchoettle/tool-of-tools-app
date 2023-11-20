@@ -1,8 +1,11 @@
 import { v4 as uuid } from 'uuid';
 
+// TODO refactor this when fully implemented
 export default class QueryClient {
 
 	#cache = new Map();
+
+	static #CACHE_LIFETIME = 5000;
 
 	constructor() {}
 
@@ -12,7 +15,8 @@ export default class QueryClient {
 		if (!this.#cache.has(key)) {
 			this.#cache.set(key, {
 				callbacks: new Map(),
-				data: undefined
+				data: undefined,
+				timestamp: undefined
 			});
 		}
 
@@ -32,15 +36,26 @@ export default class QueryClient {
 		obj.callbacks.forEach((callback) => {
 			callback(obj.data);
 		});
+		obj.timestamp = Date.now();
 	}
 
 	clearFromCache(key) {
-		if (this.#cache.has(key))
-			this.#cache.get(key).data = undefined;
+		if (this.#cache.has(key)) {
+			const obj = this.#cache.get(key);
+			obj.data = undefined;
+			obj.timestamp = undefined;
+		}
 	}
 
-	hasCacheFor(key) {
-		return this.#cache.get(key).data !== undefined;
+	cacheIsStale(key) {
+		if (this.#cache.has(key)) {
+			const obj = this.#cache.get(key);
+			if (!obj.timestamp) return true;
+			const timeDelta = Date.now() - obj.timestamp;
+			return timeDelta > QueryClient.#CACHE_LIFETIME;
+		}
+
+		return true;
 	}
 
 	getFromCache(key) {
