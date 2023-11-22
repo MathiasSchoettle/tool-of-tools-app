@@ -27,7 +27,7 @@ export default function ContextMenuInternal({children, x, y, closeMenu}) {
 			top:  newY + 'px',
 			opacity: 1
 		})
-	}, []);
+	}, [x, y]);
 
 	let handleClick = (e) => {
 		e.preventDefault();

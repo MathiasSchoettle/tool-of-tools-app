@@ -18,7 +18,7 @@ export default function SelectInput({name, onChange, errors, label, required, au
 
 	useEffect(() => {
 		emitEvent();
-	}, [selected]);
+	}, [selected, emitEvent]);
 
 	useOnClickOutside(contextMenuRef, collapse);
 

@@ -31,7 +31,7 @@ export default function Tooltip({open, bounds, children}) {
 			top:  y + 'px',
 			opacity: 1
 		})
-	}, []);
+	}, [bounds]);
 
 	return (
 		<div ref={ref} style={style} className="pointer-events-none z-50 fixed overflow-hidden shadow-lg border -translate-y-1/2 border-dp-12 bg-dp-08 shadow-dp-00 rounded text-dp-24 p-2">
