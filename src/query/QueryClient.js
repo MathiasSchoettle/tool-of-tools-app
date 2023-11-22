@@ -1,24 +1,57 @@
 
-class Query {
+const StatusType = {
+	Success: "SUCCESS",
+	Pending: "PENDING",
+	Error: "ERROR"
+}
+
+export class Query {
 	#data = undefined;
+	#status = StatusType.Pending;
+	#isFetching = false;
+
 	#listeners = [];
 
 	fetch(queryFn) {
+
+		// prevent simultaneous fetches
+		if (this.#isFetching) return;
+
+		this.#isFetching = true;
+		this.#listeners.forEach(listener => listener(this.getResult()));
+
 		queryFn()
 			.then(data => {
 				this.#data = data;
+				this.#status = StatusType.Success;
 			})
 			.catch(error => {
-				// TODO
+				// TODO set error
+				this.#status = StatusType.Error;
 			})
 			.finally(() => {
+				this.#isFetching = false;
 				this.#listeners.forEach(listener => listener(this.getResult()));
 			});
 	}
 
 	getResult() {
 		return {
-			data: this.#data
+			data: this.#data,
+			isFetching: this.#isFetching,
+			isPending: this.#status === StatusType.Pending,
+			isSuccess: this.#status === StatusType.Success,
+			isError: this.#status === StatusType.Error
+		}
+	}
+
+	static initialResult() {
+		return {
+			data: undefined,
+			isFetching: true,
+			isPending: true,
+			isSuccess: false,
+			isError: false
 		}
 	}
 
@@ -28,7 +61,6 @@ class Query {
 
 	removeListener(listener) {
 		this.#listeners = this.#listeners.filter(l => l !== listener);
-		console.log(this.#listeners)
 	}
 }
 

@@ -1,12 +1,11 @@
+import {Query} from "./QueryClient";
 
 export default class QueryObserver {
 
 	#queryKey;
 	#queryFn;
 	#queryClient;
-	#result = {
-		data: undefined
-	}
+	#result = Query.initialResult();
 
 	constructor(queryKey, queryFn, queryClient) {
 		this.#queryKey = queryKey;
