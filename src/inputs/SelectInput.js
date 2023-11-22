@@ -6,6 +6,7 @@ import CustomInput from "./util/CustomInput";
 import useEvent from "./util/EventHook";
 
 // FIXME this is not optimal
+//  the emitEvent call is called on startup as well. fix it
 export default function SelectInput({name, onChange, errors, label, required, autofocus, options, initial}) {
 
 	const [expanded, setExpanded] = useState(false)
@@ -14,7 +15,7 @@ export default function SelectInput({name, onChange, errors, label, required, au
 
 	const [selected, setSelected] = useState(initial)
 	const contextMenuRef = useRef(null);
-	const [ref, emitEvent] = useEvent('change', (e) => onChange?.(e));
+	const [ref, emitEvent] = useEvent('change', onChange);
 
 	useEffect(() => {
 		emitEvent();
