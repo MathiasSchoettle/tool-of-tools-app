@@ -9,7 +9,7 @@ export const calendar_height = 24 * item_height;
 
 export default function Calendar() {
 
-    const [today, set_today] = useState(new Date());
+    const [today] = useState(new Date());
     const [week_start, set_week_start] = useState(new Date(2023, 2, 20));
     const [selected_date, set_selected_date] = useState(today);
 
