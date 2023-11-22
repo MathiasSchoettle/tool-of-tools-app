@@ -12,7 +12,7 @@ export default function Calendar() {
 	const [month, setMonth] = useState(new Date().getMonth());
 	const [year, setYear] = useState(new Date().getFullYear());
 
-	const [events, setEvents] = useState([
+	const [events] = useState([
 		{
 			id: 1,
 			deviationId: null,
