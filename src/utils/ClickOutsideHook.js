@@ -1,5 +1,6 @@
 import {useEffect} from "react";
 
+// TODO can we use "useSyncExternalStore" here?
 export function useOnClickOutside(ref, handler) {
     useEffect(() => {
         const listener = (event) => {
