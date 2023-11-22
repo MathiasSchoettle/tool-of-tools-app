@@ -7,7 +7,7 @@ const button_colors = {
     danger: 'bg-red-900 border-red-600 hover:bg-red-700 focus:bg-red-700',
 }
 
-export default function Button({type, disabled, onClick: onClick, children}) {
+export default function Button({type, disabled, onClick, children}) {
     let color_classes = button_colors[type];
     if (!color_classes) color_classes = button_colors.default;
 
