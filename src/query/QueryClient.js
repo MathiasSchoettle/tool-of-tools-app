@@ -10,22 +10,29 @@ export class Query {
 	#status = StatusType.Pending;
 	#error = undefined;
 	#isFetching = false;
+	#lastFetch;
 
 	#listeners = [];
 
-	fetch(queryFn) {
+	fetch(queryFn, queryAge) {
+
+		if (this.#lastFetch && (Date.now() - this.#lastFetch) < queryAge) {
+			this.#notify();
+			return;
+		}
 
 		// prevent simultaneous fetches
 		if (this.#isFetching) return;
 
 		this.#isFetching = true;
-		this.#listeners.forEach(listener => listener(this.getResult()));
+		this.#notify();
 
 		queryFn()
 			.then(data => {
 				this.#error = undefined;
 				this.#data = data;
 				this.#status = StatusType.Success;
+				this.#lastFetch = Date.now();
 			})
 			.catch(error => {
 				this.#error = error.message;
@@ -33,8 +40,12 @@ export class Query {
 			})
 			.finally(() => {
 				this.#isFetching = false;
-				this.#listeners.forEach(listener => listener(this.getResult()));
+				this.#notify();
 			});
+	}
+
+	#notify() {
+		this.#listeners.forEach(listener => listener(this.getResult()));
 	}
 
 	getResult() {
@@ -72,14 +83,16 @@ export default class QueryClient {
 
 	#queryCache = new Map();
 
-	register(queryKey, queryFn, listener) {
+	register(queryKey, queryFn, queryAge, listener) {
 
 		// add new query if absent
 		if (!this.#queryCache.has(queryKey)) this.#queryCache.set(queryKey, new Query());
 
 		const query = this.#queryCache.get(queryKey);
 		query.addListener(listener);
-		query.fetch(queryFn);
+
+		queryAge = queryAge ?? 0;
+		query.fetch(queryFn, queryAge);
 
 		return () => query.removeListener(listener);
 	}

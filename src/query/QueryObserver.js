@@ -4,12 +4,14 @@ export default class QueryObserver {
 
 	#queryKey;
 	#queryFn;
+	#queryAge;
 	#queryClient;
 	#result = Query.initialResult();
 
-	constructor(queryKey, queryFn, queryClient) {
+	constructor(queryKey, queryFn, queryAge, queryClient) {
 		this.#queryKey = queryKey;
 		this.#queryFn = queryFn;
+		this.#queryAge = queryAge;
 		this.#queryClient = queryClient;
 	}
 
@@ -22,7 +24,7 @@ export default class QueryObserver {
 		const result = this.#queryClient.getCachedResult(this.#queryKey);
 		if (result) this.#result = structuredClone(result);
 
-		return this.#queryClient.register(this.#queryKey, this.#queryFn, callback);
+		return this.#queryClient.register(this.#queryKey, this.#queryFn, this.#queryAge, callback);
 	}
 
 	getResult() {
