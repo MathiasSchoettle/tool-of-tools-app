@@ -1,4 +1,4 @@
-import {Query} from "./QueryClient";
+import Query from "./Query";
 
 export default class QueryObserver {
 
