@@ -17,7 +17,10 @@ export default class QueryObserver {
 
 	register(listener) {
 		const callback = (result) => {
-			this.#result = result;
+			this.#result = {
+				...result,
+				refetch: this.#queryClient.refetch(this.#queryKey, this.#queryFn)
+			};
 			listener();
 		};
 

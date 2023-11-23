@@ -44,6 +44,13 @@ export class Query {
 			});
 	}
 
+	refetch(queryFn) {
+		if (this.#isFetching) return;
+
+		this.#lastFetch = undefined;
+		this.fetch(queryFn, 0);
+	}
+
 	#notify() {
 		this.#listeners.forEach(listener => listener(this.getResult()));
 	}
@@ -95,6 +102,10 @@ export default class QueryClient {
 		query.fetch(queryFn, queryAge);
 
 		return () => query.removeListener(listener);
+	}
+
+	refetch(queryKey, queryFn) {
+		this.#queryCache.get(queryKey).refetch(queryFn);
 	}
 
 	getCachedResult(queryKey) {
