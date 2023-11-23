@@ -7,6 +7,7 @@ export default class QueryObserver {
 	#queryAge;
 	#queryClient;
 	#result = Query.initialResult();
+	#refetch;
 
 	constructor(queryKey, queryFn, queryAge, queryClient) {
 		this.#queryKey = queryKey;
@@ -19,8 +20,13 @@ export default class QueryObserver {
 		const callback = (result) => {
 			this.#result = {
 				...result,
-				refetch: this.#queryClient.refetch(this.#queryKey, this.#queryFn)
+				refetch: this.#refetch
 			};
+
+			this.#refetch = () => {
+				this.#queryClient.refetch(this.#queryKey, this.#queryFn);
+			}
+
 			listener();
 		};
 
