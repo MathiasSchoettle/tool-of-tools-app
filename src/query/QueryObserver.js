@@ -23,6 +23,8 @@ export default class QueryObserver {
 	 * @returns a function to unsubscribe
 	 */
 	register(listener) {
+		// set any data which might already be in the cache
+		this.#setResult(this.#queryClient.getCachedResult(this.#queryKey));
 
 		// the callback updates the internal result and calls the subscriber function
 		const callback = (result) => {
@@ -30,12 +32,17 @@ export default class QueryObserver {
 			listener();
 		};
 
-		// set any data which might already be in the cache
-		this.#setResult(this.#queryClient.getCachedResult(this.#queryKey));
-
 		return this.#queryClient.register(this.#queryKey, this.#queryFn, this.#queryAge, callback);
 	}
 
+	/**
+	 * Copy over the result from the query and add the required functions
+	 * FIXME maybe this could be part of the query itself and all observers get the same result object
+	 *  but how would the refetch function get the queryKey and queryFn? and would it be a problem to have the same
+	 *  data result in all observers?
+	 *
+	 * @param result the result containing all query values and functions
+	 */
 	#setResult(result) {
 		if (!result) return;
 
