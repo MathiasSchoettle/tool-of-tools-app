@@ -8,7 +8,7 @@ import Calendar from './newcalendar/Calendar'
 import {default as Old} from './calendar/Calendar'
 
 export default function App() {
-    let [current, set_current] = useState(3)
+    let [current, set_current] = useState(5)
     let [sidebar_opened, set_sidebar_opened] = useState(false)
 
     function get_content() {
@@ -22,15 +22,14 @@ export default function App() {
             case 4:
                 return <Pomodoro />
             default:
-                return <div className="h-full w-full"></div>
+                return <></>
         }
     }
 
     return (
         <div className="w-screen h-screen overflow-hidden flex flex-col justify-between items-center bg-dp-01">
-            <TopBar
-                toggle_sidebar={() => set_sidebar_opened(!sidebar_opened)}
-            />
+            <TopBar toggle_sidebar={() => set_sidebar_opened(!sidebar_opened)}/>
+
             <div className="h-content w-full overflow-hidden flex">
                 <Sidebar set_panel={set_current} opened={sidebar_opened} />
                 <div className="grow h-full w-full">{get_content()}</div>

@@ -1,64 +1,26 @@
-import { v4 as uuid } from 'uuid';
+import Query from "./Query";
 
-// TODO refactor this when fully implemented
 export default class QueryClient {
 
-	#cache = new Map();
+	#queryCache = new Map();
 
-	static #CACHE_LIFETIME = 5000;
+	register(queryKey, queryFn, queryAge, listener) {
 
-	constructor() {}
+		// add new query if absent
+		if (!this.#queryCache.has(queryKey)) this.#queryCache.set(queryKey, new Query());
 
-	register(key, callback) {
-		const hash = uuid();
+		const query = this.#queryCache.get(queryKey);
+		query.addListener(listener);
+		query.fetch(queryFn, queryAge ?? 0);
 
-		if (!this.#cache.has(key)) {
-			this.#cache.set(key, {
-				callbacks: new Map(),
-				data: undefined,
-				timestamp: undefined
-			});
-		}
-
-		this.#cache.get(key).callbacks.set(hash, callback);
-
-		return hash;
+		return () => query.removeListener(listener);
 	}
 
-	deregister(key, hash) {
-		if (this.#cache.has(key))
-			this.#cache.get(key).callbacks.delete(hash);
+	refetch(queryKey, queryFn) {
+		this.#queryCache.get(queryKey).refetch(queryFn);
 	}
 
-	cacheQuery(key, data) {
-		const obj = this.#cache.get(key);
-		obj.data = data;
-		obj.callbacks.forEach((callback) => {
-			callback(obj.data);
-		});
-		obj.timestamp = Date.now();
-	}
-
-	clearFromCache(key) {
-		if (this.#cache.has(key)) {
-			const obj = this.#cache.get(key);
-			obj.data = undefined;
-			obj.timestamp = undefined;
-		}
-	}
-
-	cacheIsStale(key) {
-		if (this.#cache.has(key)) {
-			const obj = this.#cache.get(key);
-			if (!obj.timestamp) return true;
-			const timeDelta = Date.now() - obj.timestamp;
-			return timeDelta > QueryClient.#CACHE_LIFETIME;
-		}
-
-		return true;
-	}
-
-	getFromCache(key) {
-		return this.#cache.get(key).data;
+	getCachedResult(queryKey) {
+		return this.#queryCache.get(queryKey)?.getResult();
 	}
 }
