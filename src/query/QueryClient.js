@@ -8,6 +8,7 @@ const StatusType = {
 export class Query {
 	#data = undefined;
 	#status = StatusType.Pending;
+	#error = undefined;
 	#isFetching = false;
 
 	#listeners = [];
@@ -22,11 +23,12 @@ export class Query {
 
 		queryFn()
 			.then(data => {
+				this.#error = undefined;
 				this.#data = data;
 				this.#status = StatusType.Success;
 			})
 			.catch(error => {
-				// TODO set error
+				this.#error = error.message;
 				this.#status = StatusType.Error;
 			})
 			.finally(() => {
@@ -38,20 +40,22 @@ export class Query {
 	getResult() {
 		return {
 			data: this.#data,
+			error: this.#error,
 			isFetching: this.#isFetching,
 			isPending: this.#status === StatusType.Pending,
 			isSuccess: this.#status === StatusType.Success,
-			isError: this.#status === StatusType.Error
+			isError: this.#status === StatusType.Error,
 		}
 	}
 
 	static initialResult() {
 		return {
 			data: undefined,
+			error: undefined,
 			isFetching: true,
 			isPending: true,
 			isSuccess: false,
-			isError: false
+			isError: false,
 		}
 	}
 

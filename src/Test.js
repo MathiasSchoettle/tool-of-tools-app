@@ -1,7 +1,6 @@
-import {CrossIcon, Loader, ServerCrash} from "lucide-react";
+import {Loader, ServerCrash} from "lucide-react";
 import DangerButton from "./inputs/button/DangerButton";
 import useQuery from "./query/QueryHook";
-import {FetchStatusType} from "./query/QueryClient";
 
 const fetchUsers = async () => {
 	const index = Math.floor(Math.random() * 9 + 1);
@@ -9,14 +8,14 @@ const fetchUsers = async () => {
 
 	await new Promise(r => setTimeout(r, 1000));
 
-	if (!res.ok) throw new Error("Alarm");
+	if (!res.ok || Math.random() > 0.5) throw new Error("Could not fetch user data");
 
 	return res.json();
 };
 
 export default function Test({name}) {
 
-	const {data, isFetching, isSuccess, isError, isPending} = useQuery("users", fetchUsers);
+	const {data, error, isFetching, isSuccess, isError, isPending} = useQuery("users", fetchUsers);
 
 	if (isPending) {
 		return <div className="flex justify-center h-40 items-center">
@@ -25,8 +24,12 @@ export default function Test({name}) {
 	}
 
 	if (isError) {
-		return <div className="flex justify-center h-40 items-center">
-			<ServerCrash size={32} className="text-red-500 animate-ping"/>
+		return <div className="flex flex-col justify-center h-40 items-center gap-2">
+			<div className="text-dp-24 flex gap-2">
+				<div>{error}</div>
+				{isFetching ? <div><Loader className="animate-spin text-dp-24"/></div> : <></>}
+			</div>
+			<ServerCrash size={32} className="text-red-500"/>
 		</div>;
 	}
 
