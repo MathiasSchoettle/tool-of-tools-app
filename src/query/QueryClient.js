@@ -46,8 +46,6 @@ export class Query {
 
 	refetch(queryFn) {
 		if (this.#isFetching) return;
-
-		this.#lastFetch = undefined;
 		this.fetch(queryFn, 0);
 	}
 
