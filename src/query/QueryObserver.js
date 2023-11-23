@@ -6,7 +6,6 @@ export default class QueryObserver {
 	#queryFn;
 	#queryAge;
 	#queryClient;
-	#refetch;
 
 	#result = Query.initialResult();
 
@@ -15,7 +14,6 @@ export default class QueryObserver {
 		this.#queryFn = queryFn;
 		this.#queryAge = queryAge;
 		this.#queryClient = queryClient;
-		this.#refetch = () => this.#queryClient.refetch(this.#queryKey, this.#queryFn);
 	}
 
 	/**
@@ -42,8 +40,8 @@ export default class QueryObserver {
 		if (!result) return;
 
 		this.#result = {
-			...structuredClone(result),
-			refetch: this.#refetch
+			...result,
+			refetch: () => this.#queryClient.refetch(this.#queryKey, this.#queryFn)
 		};
 	}
 
