@@ -11,9 +11,7 @@ export default class QueryClient {
 
 		const query = this.#queryCache.get(queryKey);
 		query.addListener(listener);
-
-		queryAge = queryAge ?? 0;
-		query.fetch(queryFn, queryAge);
+		query.fetch(queryFn, queryAge ?? 0);
 
 		return () => query.removeListener(listener);
 	}
