@@ -1,8 +1,8 @@
-import {monthName} from '../utils/DateUtils'
-import {ChevronDown} from 'lucide-react'
+import {LayoutGrid, X} from 'lucide-react'
 import React, {createContext, useState} from 'react'
 import IconButton from '../inputs/button/IconButton'
 import MonthView from "./MonthView";
+import Modal from "../modal/Modal";
 
 export const ResetContext = createContext(null);
 
@@ -11,6 +11,8 @@ export default function Calendar() {
 	// TODO make these part of context ?
 	const [month, setMonth] = useState(new Date().getMonth());
 	const [year, setYear] = useState(new Date().getFullYear());
+
+	const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 
 	const [events] = useState([
 		{
@@ -50,21 +52,37 @@ export default function Calendar() {
 	}
 
 	return (
-		<div className="h-full w-full flex flex-col select-none overflow-hidden">
-			<div className="w-full text-xs text-dp-24 h-8 border-b border-dp-12 flex items-center justify-center gap-1">
-				<div onClick={reset}
-					 className="text-center w-24 bg-white bg-opacity-0 hover:bg-opacity-5 rounded py-0.5">
-					{monthName(month)} {year}
+		<div className="h-full w-full flex flex-col select-none  overflow-hidden ">
+			<div className="w-full text-xs text-dp-24 h-10 border-b border-dp-12 flex items-center justify-end px-2 gap-1">
+				<div>
+					{/*TODO UI Elements to input year / month, switch between week and month*/}
 				</div>
 
-				<IconButton>
-					<ChevronDown size={12}/>
+				<IconButton onClick={() => setCategoryModalOpen(true)}>
+					<LayoutGrid size={18}/>
 				</IconButton>
 			</div>
 
-			<ResetContext.Provider value={reset}>
-				<MonthView events={events} month={month} setMonth={setMonth} year={year} setYear={setYear}/>
-			</ResetContext.Provider>
+			<div className="w-full h-full flex">
+				{/*FIXME could we pass in a whole object in context containing the date, reset and other stuff?*/}
+				<ResetContext.Provider value={reset}>
+					<MonthView events={events} month={month} setMonth={setMonth} year={year} setYear={setYear}/>
+				</ResetContext.Provider>
+			</div>
+
+			<Modal open={categoryModalOpen} doClose={() => setCategoryModalOpen(false)}>
+				<div className="p-2 flex flex-col select-none gap-4 w-96 h-48">
+					<div className="flex w-full items-center justify-between pl-1 text-dp-24">
+						<div className="flex items-center gap-2">
+							<LayoutGrid size={16}/>
+							<div className="text-sm font-medium pt-0.5">Categories</div>
+						</div>
+						<IconButton onClick={() => setCategoryModalOpen(false)}>
+							<X size={16}/>
+						</IconButton>
+					</div>
+				</div>
+			</Modal>
 		</div>
 	);
 }
