@@ -118,7 +118,7 @@ export default function EventForm({onSubmit, date}) {
 		<form method="post" noValidate onSubmit={createSubmit(handleSubmit)} spellCheck={false}>
 
 			<div className="p-2 w-[700px] flex flex-col select-none gap-4">
-				<div className="flex w-full items-center justify-between pl-1 text-dp-24 ">
+				<div className="flex w-full items-center justify-between pl-1 text-dp-24">
 					<div className="flex items-center gap-2">
 						<CalendarPlus size={16}/>
 						<div className="text-sm font-medium pt-0.5">New Event</div>

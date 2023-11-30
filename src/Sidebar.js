@@ -11,6 +11,8 @@ import { animated, useTransition } from 'react-spring'
 import IconButton from "./inputs/button/IconButton";
 
 export default function Sidebar({ opened, set_panel }) {
+
+    // FIXME 2023-11-24, 0:55 mschoettle this could be a simple css transition instead
     const transition = useTransition(opened, {
         from: {
             width: '0',

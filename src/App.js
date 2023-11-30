@@ -8,7 +8,7 @@ import Calendar from './newcalendar/Calendar'
 import {default as Old} from './calendar/Calendar'
 
 export default function App() {
-    let [current, set_current] = useState(5)
+    let [current, set_current] = useState(3)
     let [sidebar_opened, set_sidebar_opened] = useState(false)
 
     function get_content() {
